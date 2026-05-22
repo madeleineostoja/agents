@@ -1,6 +1,6 @@
 ---
 name: github
-description: Use the GitHub CLI (gh) for read-only GitHub work — repo lookup, issue search, code search, Actions runs, and PR review. ALWAYS prefer gh over web fetching for GitHub. Trigger when the user asks (or you otherwise need) to look up a GitHub repo/issue/PR/URL, to debug a library issue (issue search), to see how a library is used in practice (code search), to inspect GitHub Actions runs, or to review a PR. NEVER use for mutations.
+description: Use the GitHub CLI (gh) for all read-only GitHub work — reading files from a repo, repo/issue/code search, PR review, Actions runs. ALWAYS prefer gh over web fetching, and prefer `gh api repos/.../contents/...` over cloning when you just need to read a handful of files. Trigger when the user names a repo/issue/PR, pastes a github.com URL (including `/tree/` or `/blob/` paths), wants to debug a library via its issues, find real-world usage via code search, inspect Actions, or review a PR. NEVER use for mutations.
 ---
 
 # Using the gh CLI
@@ -17,6 +17,28 @@ description: Use the GitHub CLI (gh) for read-only GitHub work — repo lookup, 
 
 If the answer might be in GitHub data, try `gh` before grepping further or asking the user.
 
+## Reading files vs. cloning
+
+When the user points at a repo or subtree (e.g. `github.com/owner/repo/tree/main/packages/x`) and you need to read source:
+
+- **≤5 named files, or a single subtree you can browse top-down → use `gh api` contents.** No local state, no cleanup.
+- **Broad grep/glob across many files, or you need to run the code → `gh repo clone --depth 1` into `$(mktemp -d)`.**
+
+**Do NOT `git clone` a public repo into /tmp just to read a handful of files.** That's the wrong default — use the contents API:
+
+```bash
+# List a directory
+gh api repos/owner/repo/contents/packages/coding-agent
+
+# Read a file (contents are base64-encoded)
+gh api repos/owner/repo/contents/packages/coding-agent/package.json -q .content | base64 -d
+
+# Browse a whole subtree in one call
+gh api repos/owner/repo/git/trees/HEAD:packages/coding-agent
+```
+
+If you do clone, always use `--depth 1` and clone into `$(mktemp -d)`, not a hardcoded `/tmp` path.
+
 ## Output formatting
 
 Default `gh` output is human-formatted and verbose. For programmatic consumption prefer:
@@ -27,9 +49,16 @@ Default `gh` output is human-formatted and verbose. For programmatic consumption
 
 Example: `gh issue list -R owner/repo --json number,title,state,labels -q '.[] | select(.state=="OPEN")'`
 
+**Prefer dedicated subcommands** (`gh repo view`, `gh pr view`, `gh search code`) over raw `gh api` when one fits — they have saner defaults and clearer output. Reach for `gh api` only when no subcommand covers the case (notably: reading file contents, fetching review threads, traversing git trees).
+
 ## Repo lookup and search
 
 ```bash
+# List files at a path / view file contents at a ref (see also: Reading files vs. cloning)
+gh api repos/owner/repo/contents/path/to/dir
+gh api repos/owner/repo/contents/path/to/file.ts -q .content | base64 -d
+gh api repos/owner/repo/git/trees/HEAD:path/to/dir   # full subtree in one call
+
 # View repo metadata, README, topics, default branch
 gh repo view owner/repo
 gh repo view owner/repo --json description,defaultBranchRef,stargazerCount,licenseInfo
@@ -37,10 +66,6 @@ gh repo view owner/repo --json description,defaultBranchRef,stargazerCount,licen
 # Search for repos
 gh search repos "vector database rust" --limit 10
 gh search repos --owner=anthropics --language=python
-
-# List files at a path / view file contents at a ref
-gh api repos/owner/repo/contents/path/to/dir
-gh api repos/owner/repo/contents/path/to/file.ts -q .content | base64 -d
 ```
 
 ## Issue lookup and search
