@@ -13,3 +13,7 @@ The following non-standard CLI tools are available for you to use:
 ## Commit preferences
 
 Follow a lightweight Conventional Commit pattern for commit messages: `<type>: <brief description>`. Do NOT include a scope (no `(scope)` parenthesis). Add a body (after a blank line) ONLY if there is non-obvious context worth recording.
+
+## Code convention preferences
+
+- Always prefer `type` over `interface` in Typescript
