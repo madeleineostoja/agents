@@ -24,6 +24,8 @@ description: >-
 
 Two-step process: resolve the library name to an ID, then query docs with that ID.
 
+If the `ctx7` binary isn't on your PATH, substitute `npx ctx7@latest` in every command below.
+
 ```bash
 # Step 1: Resolve library ID
 ctx7 library <name> <query>
