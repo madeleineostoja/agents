@@ -25,3 +25,4 @@ Keep subagent outputs concise: files, patterns, change points, tests, risks. Def
 ## Code convention preferences
 
 - Prefer `type` over `interface` in TypeScript unless features of interfaces (eg: declaration merging) are stricly required
+- Infer package manager used in a project by its lockfile, if a project does not have a lockfile prefer to system defaults (eg: npm)
