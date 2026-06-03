@@ -47,7 +47,7 @@ Number of tasks alone is a bad signal. If genuinely ambiguous, ask the user.
 
 Propose a default and confirm with the user. Detection order:
 
-1. If the repo already has `.specs/`, `plans/`, `docs/plans/`, or similar — use it
+1. If the repo already has `plans/`, `docs/plans/`, `tmp/plans` or similar suggest that location
 2. Otherwise: single file → `PLAN.md` (or `plan-<slug>.md` if `PLAN.md` exists) at repo root; multi-file → `plans/<slug>/` with the index inside
 
 Always confirm before writing. Never write to an unconfirmed path.
