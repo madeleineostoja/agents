@@ -15,7 +15,9 @@ The artifact is the point. Do the heavy work here — exploration, edge cases, d
 
 ### 1. Clarify
 
-Resolve every open requirement, scope boundary, edge case, and tradeoff in conversation. Ask the user directly in prose for any gaps. **Do not finish the skill with unresolved questions** — if a question requires implementation evidence to answer (e.g. depends on observing runtime behavior), encode it as a task whose acceptance is the recorded answer.
+Resolve every open requirement, scope boundary, edge case, and tradeoff in conversation. Ask the user directly in prose for any gaps. **Do not finish the skill with unresolved questions**.
+
+Investigation tasks are allowed only when the answer genuinely requires implementation or runtime evidence. Label them explicitly, give concrete acceptance, and make them produce a recorded decision or choose between already-described branches.
 
 If invoked cold, spend extra time here. If invoked after prior discussion, build on it.
 
@@ -50,6 +52,8 @@ Propose a default and confirm with the user. Detection order:
 1. If the repo already has `plans/`, `docs/plans/`, `tmp/plans` or similar suggest that location
 2. Otherwise: single file → `PLAN.md` (or `plan-<slug>.md` if `PLAN.md` exists) at repo root; multi-file → `plans/<slug>/` with the index inside
 
+Before writing, check whether every target file or directory already exists. Never overwrite an existing plan artifact unless the user explicitly confirms replacement.
+
 Always confirm before writing. Never write to an unconfirmed path.
 
 ### 5. Write
@@ -57,6 +61,8 @@ Always confirm before writing. Never write to an unconfirmed path.
 Use the templates below.
 
 **Task sizing**: Each task is atomic — one meaningful, individually verifiable unit of work. Acceptance is observable without human judgment.
+
+The executable task list must always live under a literal `## Tasks` heading. Each top-level unchecked checkbox in that section is an executable task; put plan links or other metadata as indented non-checkbox lines under the task.
 
 **Always consider** Out of Scope and Decisions: think through whether they apply, then write the section only if non-empty.
 
@@ -73,9 +79,11 @@ Use the templates below.
 
 **Always** self-review the artifact. Read it through, fix obvious gaps.
 
-For non-trivial plans, also delegate cold-read validation to a fresh agent (one with no context from this conversation). Prompt shape:
+For non-trivial plans, also delegate cold-read validation to a fresh agent. If available, use an Implement agent because it best approximates the eventual executor; otherwise use a general purpose subagent.
 
-> Read the plan at `<path>`. You have no other context about this work. For each task: describe what you'd do, and list anything you can't determine from the plan alone. Don't execute. Report gaps in under 300 words.
+Prompt shape:
+
+> Read the plan at `<path>`. Read-only validation only: do not edit, write, modify files, run commands, run tests, or execute the plan. You have no other context about this work. For each task: describe what you'd do, and list anything you can't determine from the plan alone. Report gaps in under 300 words.
 
 Use the gap list to patch the plan. Re-run validation at most twice; if substantive gaps remain, surface them to the user instead of looping further.
 
@@ -83,7 +91,17 @@ Self-review is hygiene; cold-read by a fresh agent is the only real check that t
 
 ### 7. Present
 
-Show the file(s) to the user and iterate until approved. Report the path(s) written.
+End with a concise summary message, not a full dump unless requested.
+
+Include:
+
+- Plan file path(s) created
+- One-sentence goal of the plan
+- Task count and notable supporting files
+- Any unresolved risks or user decisions, if present
+- Whether cold-read validation was run and what changed because of it
+
+Offer to show or revise specific files and iterate until approved.
 
 ## Templates
 
@@ -142,13 +160,13 @@ One-paragraph summary of the overall work and goal.
 - [ ] ...
 ```
 
-Tasks in the index are ordered by dependency, then priority. Each task references the supporting plan file(s) that carry its context.
+Tasks in the index are ordered by dependency, then priority. Each task references the supporting plan file(s) that carry its context. When a supporting file is shared by multiple tasks, structure it so each task's relevant acceptance criteria are obvious without duplicating them in the index.
 
 Each supporting plan file uses the single-file template minus the `## Tasks` section (tasks live in the index).
 
 ## Guidelines
 
-- **Resolve, don't defer** — every question gets answered in Clarify, or becomes a task with concrete acceptance. The artifact contains no open questions.
+- **Resolve, don't defer** — every question gets answered in Clarify. Only implementation/runtime unknowns may become labeled investigation tasks with concrete acceptance and a recorded decision output.
 - **Verify before claiming absence** — never assume something isn't implemented; check.
 - **Always consider Out of Scope and Decisions** — write the sections only if non-empty, but always think through whether they apply.
 - **Plan files encode decisions** — everything the executor needs lives in the artifact.
