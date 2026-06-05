@@ -62,7 +62,7 @@ Use the templates below.
 
 **Task sizing**: Each task is atomic — one meaningful, individually verifiable unit of work. Acceptance is observable without human judgment.
 
-The executable task list must always live under a literal `## Tasks` heading. Each top-level unchecked checkbox in that section is an executable task; put plan links or other metadata as indented non-checkbox lines under the task.
+Every executable plan artifact must contain a literal `## Tasks` heading. For a single-file plan, the single file must contain it. For an index + supporting plans shape, the index file must contain it. The `## Tasks` section is mandatory and must contain at least one top-level unchecked checkbox task. Each top-level unchecked checkbox in that section is an executable task; put plan links or other metadata as indented non-checkbox lines under the task. Never present a plan as complete if the required `## Tasks` section is missing.
 
 **Always consider** Out of Scope and Decisions: think through whether they apply, then write the section only if non-empty.
 
@@ -76,6 +76,14 @@ The executable task list must always live under a literal `## Tasks` heading. Ea
 - Reads cold: a fresh executor should not need to ask the original requester anything.
 
 ### 6. Validate
+
+Before presenting, structurally verify the artifact:
+
+- Single-file plan: the file contains a literal `## Tasks` heading.
+- Index + supporting plans: the index file contains a literal `## Tasks` heading.
+- The required `## Tasks` section contains at least one top-level unchecked checkbox task: `- [ ] ...`.
+- Executable tasks appear only under `## Tasks`.
+- If any check fails, fix the artifact before presenting.
 
 **Always** self-review the artifact. Read it through, fix obvious gaps.
 
@@ -116,8 +124,8 @@ Why this is needed. Background. How it fits.
 
 ## Acceptance Criteria
 
-- [ ] Observable, testable criterion (include verification — tests, manual checks, etc.)
-- [ ] ...
+- Observable, testable criterion (include verification — tests, manual checks, etc.)
+- ...
 
 ## Out of Scope
 
