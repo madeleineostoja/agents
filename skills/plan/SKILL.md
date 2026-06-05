@@ -17,9 +17,9 @@ The artifact is the point. Do the heavy work here — exploration, edge cases, d
 
 Resolve every open requirement, scope boundary, edge case, and tradeoff in conversation. Ask the user directly in prose for any gaps. **Do not finish the skill with unresolved questions**.
 
-Investigation tasks are allowed only when the answer genuinely requires implementation or runtime evidence. Label them explicitly, give concrete acceptance, and make them produce a recorded decision or choose between already-described branches.
-
 If invoked cold, spend extra time here. If invoked after prior discussion, build on it.
+
+**Investigation tasks are the only allowed escape hatch.** Use them only when the answer genuinely requires implementation or runtime evidence — never as a way to defer a decision the user could make in conversation. Label them explicitly, give concrete acceptance, and make them produce a recorded decision or choose between already-described branches.
 
 ### 2. Explore
 
@@ -47,14 +47,9 @@ Number of tasks alone is a bad signal. If genuinely ambiguous, ask the user.
 
 ### 4. Choose location
 
-Propose a default and confirm with the user. Detection order:
-
-1. If the repo already has `plans/`, `docs/plans/`, `tmp/plans` or similar suggest that location
-2. Otherwise: single file → `PLAN.md` (or `plan-<slug>.md` if `PLAN.md` exists) at repo root; multi-file → `plans/<slug>/` with the index inside
-
-Before writing, check whether every target file or directory already exists. Never overwrite an existing plan artifact unless the user explicitly confirms replacement.
-
-Always confirm before writing. Never write to an unconfirmed path.
+- Detect: if the repo already has `plans/`, `docs/plans/`, `tmp/plans/` or similar, use it. Otherwise default to `plan-<slug>.md` for single-file, or `plans/<slug>/` for multi-file.
+- Confirm the path with the user before writing. Never write to an unconfirmed path.
+- Never overwrite an existing plan artifact without explicit confirmation.
 
 ### 5. Write
 
@@ -62,40 +57,40 @@ Use the templates below.
 
 **Task sizing**: Each task is atomic — one meaningful, individually verifiable unit of work. Acceptance is observable without human judgment.
 
-Every executable plan artifact must contain a literal `## Tasks` heading. For a single-file plan, the single file must contain it. For an index + supporting plans shape, the index file must contain it. The `## Tasks` section is mandatory and must contain at least one top-level unchecked checkbox task. Each top-level unchecked checkbox in that section is an executable task; put plan links or other metadata as indented non-checkbox lines under the task. Never present a plan as complete if the required `## Tasks` section is missing.
+**`## Tasks` is mandatory**: The single-file plan, or the index file for multi-file, must contain a literal `## Tasks` heading with at least one top-level unchecked checkbox (`- [ ] ...`). Each top-level checkbox is one executable task; put plan links and other metadata as indented non-checkbox lines beneath it.
 
-**Always consider** Out of Scope and Decisions: think through whether they apply, then write the section only if non-empty.
+**Out of Scope and Decisions**: think through whether they apply, then write the section only if non-empty.
 
-**Quality bar**:
+**Guidelines:**
 
-- Implementation-agnostic where possible: specify WHAT, not HOW. Implementation Notes is for breadcrumbs, not prescriptions.
-  - Good: `POST /widgets` with missing `name` returns 400 with `errors[0].field === 'name'`
-  - Bad: Add input validation to the widgets endpoint using zod
-- Every acceptance criterion observable. Include verification approach (tests, manual checks) inline with the criterion.
-- No ambiguity about what "done" means.
+- Specify contracts and decisions over code structure. Encode what's observable from outside the module (API shape, error semantics, data model, chosen libraries when the team has standardized) and decisions the implementer can't re-derive
+  - Good example: `POST /widgets` with missing `name` returns 400 with `errors[0].field === 'name'`. Validation uses the project's existing zod schemas
+  - Bad example: In `widgets.ts`, add a `validateWidget(input)` function using `z.object({...})` and call it at the top of the POST handler
+- Every acceptance criterion is observable. Include verification approach (tests, manual checks) inline with the criterion.
 - Reads cold: a fresh executor should not need to ask the original requester anything.
 
 ### 6. Validate
 
-Before presenting, structurally verify the artifact:
+Validate in two phases.
 
-- Single-file plan: the file contains a literal `## Tasks` heading.
-- Index + supporting plans: the index file contains a literal `## Tasks` heading.
-- The required `## Tasks` section contains at least one top-level unchecked checkbox task: `- [ ] ...`.
+**1. Structural**
+
+- The `## Tasks` heading exists in the right file (single-file plan, or index file for multi-file).
+- At least one top-level unchecked checkbox task: `- [ ] ...`.
 - Executable tasks appear only under `## Tasks`.
-- If any check fails, fix the artifact before presenting.
 
-**Always** self-review the artifact. Read it through, fix obvious gaps.
+Fix any failure before presenting.
 
-For non-trivial plans, also delegate cold-read validation to a fresh agent. If available, use an Implement agent because it best approximates the eventual executor; otherwise use a general purpose subagent.
+**2. Semantic**
+2a. Self-review: read the artifact through and fix obvious gaps.
+
+2b. For non-trivial plans, delegate cold-read validation to a fresh agent. Prefer an Implement agent (best approximates the eventual executor) if available; otherwise use general-purpose.
 
 Prompt shape:
 
-> Read the plan at `<path>`. Read-only validation only: do not edit, write, modify files, run commands, run tests, or execute the plan. You have no other context about this work. For each task: describe what you'd do, and list anything you can't determine from the plan alone. Report gaps in under 300 words.
+> Read the plan at `<path>` as a cold implementer. Read-only validation only: do not edit, write, modify files, run tests, or execute the plan. You have no other context about this work. Assume the implementer can do normal code exploration and run appropriate verification. For each task, determine whether there would be any blockers or material gaps for implementation. For each gap, include the Task, Gap, and Why it matters. If there are no gaps, say "Ready to implement, no material gaps".
 
-Use the gap list to patch the plan. Re-run validation at most twice; if substantive gaps remain, surface them to the user instead of looping further.
-
-Self-review is hygiene; cold-read by a fresh agent is the only real check that the artifact reads cold.
+Action reviewer comments with discretion. Re-run validation at most twice; if substantive gaps remain, surface them to the user instead of looping further.
 
 ### 7. Present
 
@@ -106,7 +101,7 @@ Include:
 - Plan file path(s) created
 - One-sentence goal of the plan
 - Task count and notable supporting files
-- Any unresolved risks or user decisions, if present
+- Any known non-blocking risks, assumptions, or follow-up decisions, if present
 - Whether cold-read validation was run and what changed because of it
 
 Offer to show or revise specific files and iterate until approved.
@@ -171,11 +166,3 @@ One-paragraph summary of the overall work and goal.
 Tasks in the index are ordered by dependency, then priority. Each task references the supporting plan file(s) that carry its context. When a supporting file is shared by multiple tasks, structure it so each task's relevant acceptance criteria are obvious without duplicating them in the index.
 
 Each supporting plan file uses the single-file template minus the `## Tasks` section (tasks live in the index).
-
-## Guidelines
-
-- **Resolve, don't defer** — every question gets answered in Clarify. Only implementation/runtime unknowns may become labeled investigation tasks with concrete acceptance and a recorded decision output.
-- **Verify before claiming absence** — never assume something isn't implemented; check.
-- **Always consider Out of Scope and Decisions** — write the sections only if non-empty, but always think through whether they apply.
-- **Plan files encode decisions** — everything the executor needs lives in the artifact.
-- **The index is for ordering** — task ordering by dependency lives in the index; supporting files are the source of truth for context.
