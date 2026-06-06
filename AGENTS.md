@@ -13,7 +13,7 @@ The following non-standard CLI tools are available for you to use:
 
 ## Commit preferences
 
-Follow a lightweight Conventional Commit pattern for commit messages: `<type>: <brief description>`. Avoid including a scope (ie: no `(scope)` parenthesis) unless it adds meaningful clarity (eg: in a monorepo of many packages). Add a body (after a blank line) ONLY if there is non-obvious context worth recording.
+Follow a lightweight Conventional Commit pattern for commit messages: `<type>: <brief description>`. Only include a scope (ie: `<type>(scope):`) if it adds meaningful clarity not evident from the commit message (eg: targeting one package in a monorepo of many packages). Add a body (after a blank line) only if there is non-obvious context worth recording.
 
 ## Testing preferences
 
