@@ -1,7 +1,7 @@
 ## Rules
 
 - Default to writing no code comments. Only add one when the "why" is non-obvious — a hidden constraint, subtle invariant, bug workaround, or surprising behaviour. Don't restate what the code does, don't label sections, don't annotate every change
-- Before non-trivial or multi-file edits, summarize intended changes and ask for confirmation unless the user clearly asked you to implement, fix, or modify files
+- Before starting edits, summarize intended changes and ask for confirmation unless the user clearly asked you to create or modify files
 
 ## Tool preferences
 
