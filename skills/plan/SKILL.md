@@ -84,7 +84,7 @@ Fix any failure before presenting.
 **2. Semantic**
 2a. Self-review: read the artifact through and fix obvious gaps.
 
-2b. For non-trivial plans, delegate cold-read validation to a fresh agent. Prefer an Implement agent (best approximates the eventual executor) if available; otherwise use general-purpose.
+2b. For non-trivial plans, delegate cold-read validation to a fresh agent. Prefer an Implement agent (best approximates the eventual executor) if available; otherwise use general-purpose. Ensure you set a high enough max turn limit on any subagents to actually assess the plans.
 
 Prompt shape:
 
