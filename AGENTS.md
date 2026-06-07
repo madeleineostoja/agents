@@ -29,6 +29,6 @@ Follow a lightweight Conventional Commit pattern for commit messages: `<type>: <
 
 ## Subagents
 
-Use Explore subagents to keep main context lean during non-trivial discovery of either a codebase or external resources (eg: GitHub repos, web fetch). Eg: when relevant files are unclear, patterns span multiple files, or debugging requires tracing across modules. Skip for small/local edits or obvious files.
-
-Use general-purpose implementation subagents only for well-scoped parallel work with clear boundaries.
+- Use the Explore subagent for non-trivial codebase discovery: locating symbols, tracing usage, answering "where is X / what references Y / what calls Z", or mapping patterns across files. Reach for it before running your own multi-step or wide grep/find sweeps; it keeps the main context lean. Skip it when you already know the relevant file path, only need an obvious single-file read, or are doing a tiny/local edit.
+- Use the Review subagent as an independent second-pass reviewer for large, risky, or multi-file diffs during an active implementation session. Avoid delegating to Review in a fresh session where the user’s main request is already a review; you have no context to isolate from, so review the artifact directly
+- Use general-purpose implementation subagents only for well-scoped parallel work with clear boundaries.
