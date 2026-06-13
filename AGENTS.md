@@ -5,7 +5,7 @@
 
 ## Tool preferences
 
-The following non-standard CLI tools are available for you to use:
+The following non-standard CLI tools are available; prefer them over the defaults:
 
 - Prefer `rg` instead of `grep` (example: `rg "pattern"` instead of `grep -r "pattern"`)
 - Prefer `fd` instead of `find` (example: `fd "filename"` instead of `find . -name "filename"`)
@@ -13,7 +13,9 @@ The following non-standard CLI tools are available for you to use:
 
 ## Commit preferences
 
-Follow a lightweight Conventional Commit pattern for commit messages: `<type>: <brief description>`. Only include a scope (ie: `<type>(scope):`) if it adds meaningful clarity not evident from the commit message (eg: targeting one package in a monorepo of many packages). Add a body (after a blank line) only if there is non-obvious context worth recording.
+- Follow a lightweight Conventional Commit pattern for commit messages: `<type>: <brief description>`
+- Add a scope (ie: `<type>(scope):`) only if it adds meaningful clarity, eg: when the commit targets one package in a monorepo of many
+- Add a body (ie: after a blank line) only if there is non-obvious context not inferable from the main message
 
 ## Testing preferences
 
@@ -27,8 +29,20 @@ Follow a lightweight Conventional Commit pattern for commit messages: `<type>: <
 
 - In TypeScript projects, prefer `type` over `interface` unless features of interfaces (eg: declaration merging) are strictly required
 
+## Context efficient bash
+
+When the only signal you need from a command is whether it succeeded (eg: tests, lint/typecheck/format checks, builds, dependency installs), wrap it so a success output collapses to a short label and a non-zero exit prints its full output. Skip when you actually need the output (eg: git diff/status, watching long-running streams, test coverage numbers, etc)
+
+```sh
+out=$(<cmd> 2>&1) && echo "<passed label>" || { printf '%s\n' "$out"; exit 1; }
+
+# eg
+out=$(pnpm test 2>&1) && echo "tests pass" || { printf '%s\n' "$out"; exit 1; }
+out=$(tsc --noEmit 2>&1) && echo "typecheck clean" || { printf '%s\n' "$out"; exit 1; }
+```
+
 ## Subagents
 
-- Use the Explore subagent for non-trivial codebase discovery: locating symbols, tracing usage, answering "where is X / what references Y / what calls Z", or mapping patterns across files. Reach for it before running your own multi-step or wide grep/find sweeps; it keeps the main context lean. Skip it when you already know the relevant file path, only need an obvious single-file read, or are doing a tiny/local edit.
+- Use the Explore subagent for non-trivial codebase discovery: locating symbols, tracing usage, answering "where is X / what references Y / what calls Z", or mapping patterns across files. Reach for it before running your own multi-step or wide grep/find sweeps; it keeps the main context lean. Skip it when a targeted read or two would answer the question — a single known file, an obvious local lookup, or a tiny edit; don't escalate that into a full Explore
 - Use the Review subagent as an independent second-pass reviewer for large, risky, or multi-file diffs during an active implementation session. Avoid delegating to Review in a fresh session where the user’s main request is already a review; you have no context to isolate from, so review the artifact directly
-- Use general-purpose implementation subagents only for well-scoped parallel work with clear boundaries.
+- Use General purpose subagents only for well-scoped parallel work with clear boundaries
