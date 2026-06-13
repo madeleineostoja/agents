@@ -1,168 +1,141 @@
 ---
 name: plan
-description: Produce a written plan artifact that a separate executor can implement without further clarification. Use only when the user explicitly asks to plan something (e.g. "/plan", "plan this", "spec this out"), or after confirming with the user that planning is the right next step rather than execution.
+description: Produce a written implementation handoff plan that a future executor can use without relying on the original conversation. Use only when the user explicitly asks to plan something (e.g. "/plan", "plan this", "spec this out"), or after confirming that planning is the right next step rather than execution.
 ---
 
 # Plan
 
-Produce a written plan that a fresh session can pick up and execute without re-deriving any of the reasoning.
+Produce a human-readable plan artifact that captures the goal, constraints, decisions, tradeoffs, and work breakdown well enough for a future executor — human, agent, or automation — to act autonomously without re-deriving the original conversation.
 
-**A plan is written for one executor to consume once.** Don't design for updates, versioning, or maintenance. The plan exists purely to transfer thinking from one context to another.
+The artifact is the point. Do the heavy thinking here: clarify ambiguity, explore the existing system, record decisions, identify edge cases, and write the plan so it reads cold.
 
-The artifact is the point. Do the heavy work here — exploration, edge cases, decisions, tradeoffs — so the executor reads cold and acts.
+A plan is a handoff document, not a permanent specification system. Avoid unnecessary process, taxonomy, or maintenance structure unless the work actually needs it.
 
 ## Process
 
 ### 1. Clarify
 
-Resolve every open requirement, scope boundary, edge case, and tradeoff in conversation. Ask the user directly in prose for any gaps. **Do not finish the skill with unresolved questions**.
+Resolve open requirements, scope boundaries, edge cases, and tradeoffs in conversation. Ask the user directly in prose for gaps that matter. **Do not finish the plan with unresolved user-facing questions.**
 
-If invoked cold, spend extra time here. If invoked after prior discussion, build on it.
+If invoked cold, spend extra time here. If invoked after prior discussion, preserve the decisions already made instead of reopening them.
 
 **Investigation tasks are the only allowed escape hatch.** Use them only when the answer genuinely requires implementation or runtime evidence — never as a way to defer a decision the user could make in conversation. Label them explicitly, give concrete acceptance, and make them produce a recorded decision or choose between already-described branches.
 
 ### 2. Explore
 
-Explore enough to know existing patterns, integration points, and that the thing you're about to plan doesn't already exist. Never assume functionality is absent — check. Stop when more exploration won't change the plan.
+Explore enough to understand existing patterns, integration points, constraints, and whether the requested work already exists. Never assume functionality is absent — check. Stop when more exploration is unlikely to change the plan.
 
-The output is informal: notes, file pointers, identified patterns. You'll use these when writing.
+The output can be informal while exploring: notes, file pointers, discovered patterns, and constraints. Use these when writing the artifact.
 
 ### 3. Choose shape
 
-Two shapes:
+Use the lightest shape that preserves autonomy.
 
-- **Single file** — one plan file with context, acceptance, file pointers, and a checkbox task list inline. For cohesive, contained work.
-- **Index + supporting plans** — an index plan file owns the checkbox task list. Each task references a supporting plan file (or shares one with siblings). Supporting files carry the detailed context, acceptance criteria, decisions, and implementation notes.
+- **Single file** — one plan file with context, acceptance, file pointers, and a task list inline. Use for cohesive, contained work.
+- **Multi-file plan** — an index file owns the overview and task list; task files and/or supporting docs carry the details. Use when shared context, distinct workstreams, or non-obvious design decisions would make a single file noisy.
 
-Use supporting plan files when **any** of these apply:
+Use multiple files when any of these apply:
 
-- Shared context across multiple tasks that would otherwise be duplicated
-- Non-obvious requirements or edge cases worth documenting independent of any single task
-- New domain concepts or abstractions that need defining once
-- Rich acceptance criteria that don't reduce to "code does X"
-- Cross-cutting decisions (data model, API contract, naming) multiple tasks must respect
-- Independently implementable sub-topics — each gets its own supporting file
+- Shared context across multiple tasks would otherwise be duplicated.
+- Non-obvious constraints, edge cases, or decisions need to be explained once.
+- The work introduces domain concepts, APIs, data models, workflows, or architecture that deserve their own explanation.
+- Several independently understandable tasks need different acceptance criteria or implementation notes.
+- The plan needs generic supporting context that is not itself a task contract.
 
-Number of tasks alone is a bad signal. If genuinely ambiguous, ask the user.
+Number of tasks alone is a weak signal. If genuinely ambiguous, ask the user.
+
+#### Multi-file guidance
+
+Distinguish task-specific files from supporting docs.
+
+- **Task files** describe one implementation milestone. They can include objective, scope, acceptance, verification, and source context.
+- **Supporting docs** explain shared context. Name and structure them around the actual subject matter, not a required taxonomy. They may describe background, constraints, decisions, API shape, data model, edge cases, integration notes, non-goals, or tradeoffs.
+
+Do not make a supporting doc look like a task contract unless it really is one. If a supporting doc includes acceptance criteria, make clear whether they are global criteria for the whole plan or contextual constraints for downstream tasks.
+
+A typical multi-file layout may look like this, but adapt names and files to the work:
+
+```text
+plans/<slug>/
+  index.md
+  <shared-topic>.md
+  <integration-topic>.md
+  tasks/
+    001-<task>.md
+    002-<task>.md
+```
 
 ### 4. Choose location
 
-- Detect: if the repo already has `plans/`, `docs/plans/`, `tmp/plans/` or similar, use it. Otherwise default to `plan-<slug>.md` for single-file, or `plans/<slug>/` for multi-file.
+- Detect whether the repo already has `plans/`, `docs/plans/`, `tmp/plans/`, or similar. Use existing conventions when present.
+- Otherwise default to `plan-<slug>.md` for a single file, or `plans/<slug>/` for multi-file plans.
 - Confirm the path with the user before writing. Never write to an unconfirmed path.
 - Never overwrite an existing plan artifact without explicit confirmation.
 
 ### 5. Write
 
-Use the templates below.
+Use the templates in `templates/` as starting points when helpful. Adapt headings to the work; do not force empty sections.
 
-**Task sizing**: Each task is atomic — one meaningful, individually verifiable unit of work. Acceptance is observable without human judgment.
+Default conventions for implementation handoff plans:
 
-**`## Tasks` is mandatory**: The single-file plan, or the index file for multi-file, must contain a literal `## Tasks` heading with at least one top-level unchecked checkbox (`- [ ] ...`). Each top-level checkbox is one executable task; put plan links and other metadata as indented non-checkbox lines beneath it.
+- Include an explicit task or checklist section for implementation work, usually `## Tasks`.
+- Order tasks by dependency, then priority.
+- Make tasks meaningful implementation milestones, not tiny mechanical steps.
+- Record observable acceptance criteria where they help autonomy.
+- Include verification guidance where the executor would otherwise have to guess.
+- Capture contracts and decisions over code choreography.
+  - Good: `POST /widgets` with missing `name` returns 400 with `errors[0].field === "name"`. Validation uses the project's existing schema pattern.
+  - Bad: In `widgets.ts`, add a `validateWidget(input)` function and call it at the top of the handler.
+- Use normal markdown links for task files and supporting docs unless the surrounding project already has a stronger convention.
+- Keep source pointers as breadcrumbs, not step-by-step implementation instructions.
+- If the artifact is a design note, investigation plan, or decision record rather than an implementation handoff, do not force `## Tasks`.
 
-**Out of Scope and Decisions**: think through whether they apply, then write the section only if non-empty.
+### 6. Self-check
 
-**Guidelines:**
+Before presenting, read the artifact as if you were a fresh executor.
 
-- Specify contracts and decisions over code structure. Encode what's observable from outside the module (API shape, error semantics, data model, chosen libraries when the team has standardized) and decisions the implementer can't re-derive
-  - Good example: `POST /widgets` with missing `name` returns 400 with `errors[0].field === 'name'`. Validation uses the project's existing zod schemas
-  - Bad example: In `widgets.ts`, add a `validateWidget(input)` function using `z.object({...})` and call it at the top of the POST handler
-- Every acceptance criterion is observable. Include verification approach (tests, manual checks) inline with the criterion.
-- Reads cold: a fresh executor should not need to ask the original requester anything.
+Check:
 
-### 6. Validate
+- No unresolved user-facing questions remain.
+- Scope, out-of-scope items, and important decisions are captured.
+- A fresh executor would know where to start.
+- Referenced local files exist.
+- Task/checklist structure is present when this is an implementation handoff plan.
+- Supporting docs are not accidentally written as task contracts.
 
-Validate in two phases.
+Fix obvious gaps before presenting.
 
-**1. Structural**
+### 7. Optional cold read
 
-- The `## Tasks` heading exists in the right file (single-file plan, or index file for multi-file).
-- At least one top-level unchecked checkbox task: `- [ ] ...`.
-- Executable tasks appear only under `## Tasks`.
+Cold reads are for executor autonomy, not mechanical markdown validation. They test whether someone without the original conversation can act from the artifact.
 
-Fix any failure before presenting.
+Run a cold read by default for non-trivial or multi-file plans. It matters most when:
 
-**2. Semantic**
-2a. Self-review: read the artifact through and fix obvious gaps.
+- the work is cross-cutting, architecture-heavy, security-sensitive, destructive, concurrent, persistent, or public-API-facing;
+- the authoring conversation had lots of decisions that may not be captured cleanly;
+- the executor will need to work autonomously without asking follow-up questions;
+- the user asks for a "handoff", "implementation-ready", "thorough", or "autonomous" plan.
 
-2b. For non-trivial plans, delegate cold-read validation to a fresh agent. Prefer an Implement agent (best approximates the eventual executor) if available; otherwise use general-purpose. Ensure you set a high enough max turn limit on any subagents to actually assess the plans.
+Skip cold reads when the plan is small/local, still exploratory, mostly for the same person/session, or the latency/cost is disproportionate.
+
+Usually decide whether to run a cold read yourself and report it in the final summary. Ask the user first when the cold read would be materially slow or expensive.
 
 Prompt shape:
 
-> Read the plan at `<path>` as a cold implementer. Read-only validation only: do not edit, write, modify files, run tests, or execute the plan. You have no other context about this work. Assume the implementer can do normal code exploration and run appropriate verification. For each task, determine whether there would be any blockers or material gaps for implementation. For each gap, include the Task, Gap, and Why it matters. If there are no gaps, say "Ready to implement, no material gaps".
+> Read the plan at `<path>` as a cold executor. Read-only validation only: do not edit, write, modify files, run tests, or execute the plan. You have no other context about this work. Assume the executor can do normal code exploration and run appropriate verification. Identify any blockers or material gaps that would prevent autonomous implementation. For each gap, include Location, Gap, and Why it matters. If there are no material gaps, say "Ready for autonomous execution, no material gaps".
 
-Action reviewer comments with discretion. Re-run validation at most twice; if substantive gaps remain, surface them to the user instead of looping further.
+Act on cold-read feedback with judgment. Re-run at most once after substantive edits; if meaningful gaps remain, surface them to the user instead of looping.
 
-### 7. Present
+### 8. Present
 
-End with a concise summary message, not a full dump unless requested.
+End with a concise summary, not a full dump unless requested.
 
 Include:
 
-- Plan file path(s) created
-- One-sentence goal of the plan
-- Task count and notable supporting files
-- Any known non-blocking risks, assumptions, or follow-up decisions, if present
-- Whether cold-read validation was run and what changed because of it
+- Plan file path(s) created.
+- One-sentence goal of the plan.
+- Task count and notable supporting files, if any.
+- Known non-blocking risks, assumptions, or follow-up decisions, if present.
+- Whether a cold read was run and what changed because of it.
 
 Offer to show or revise specific files and iterate until approved.
-
-## Templates
-
-### Single file
-
-```markdown
-# {Title}
-
-## Context
-
-Why this is needed. Background. How it fits.
-
-## Acceptance Criteria
-
-- Observable, testable criterion (include verification — tests, manual checks, etc.)
-- ...
-
-## Out of Scope
-
-(Include if there are notable exclusions; omit otherwise.)
-
-## Decisions
-
-(Include if non-trivial decisions were made and the reasoning matters to the executor; omit otherwise.)
-
-## Implementation Notes
-
-File pointers, relevant patterns. Breadcrumbs, not instructions.
-
-## Tasks
-
-- [ ] Task one
-- [ ] Task two
-- [ ] ...
-```
-
-### Index + supporting
-
-Index file:
-
-```markdown
-# {Title}
-
-One-paragraph summary of the overall work and goal.
-
-## Out of Scope
-
-(Include if there are notable exclusions; omit otherwise.)
-
-## Tasks
-
-- [ ] Task one
-  - Plan: `<supporting-file>.md`
-- [ ] Task two
-  - Plan: `<supporting-file>.md`
-- [ ] ...
-```
-
-Tasks in the index are ordered by dependency, then priority. Each task references the supporting plan file(s) that carry its context. When a supporting file is shared by multiple tasks, structure it so each task's relevant acceptance criteria are obvious without duplicating them in the index.
-
-Each supporting plan file uses the single-file template minus the `## Tasks` section (tasks live in the index).
