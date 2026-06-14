@@ -86,7 +86,8 @@ Default conventions for implementation handoff plans:
 - Capture contracts and decisions over code choreography.
   - Good: `POST /widgets` with missing `name` returns 400 with `errors[0].field === "name"`. Validation uses the project's existing schema pattern.
   - Bad: In `widgets.ts`, add a `validateWidget(input)` function and call it at the top of the handler.
-- Use normal markdown links for task files and supporting docs unless the surrounding project already has a stronger convention.
+- In task lists, keep task titles as plain text. If a task has its own file, add the markdown link after the title, e.g. `- [ ] Implement widget API ([task file](tasks/001-widget-api.md))`.
+- Use normal markdown links for supporting docs unless the surrounding project already has a stronger convention.
 - Keep source pointers as breadcrumbs, not step-by-step implementation instructions.
 - If the artifact is a design note, investigation plan, or decision record rather than an implementation handoff, do not force `## Tasks`.
 

@@ -18,5 +18,5 @@ Background, constraints, and links to supporting docs that apply across tasks.
 
 ## Tasks
 
-- [ ] [Task one](tasks/001-task-one.md)
-- [ ] [Task two](tasks/002-task-two.md)
+- [ ] Task one ([task file](tasks/001-task-one.md))
+- [ ] Task two ([task file](tasks/002-task-two.md))
