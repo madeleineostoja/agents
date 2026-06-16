@@ -36,9 +36,8 @@ Use the lightest shape that preserves autonomy.
 
 Use multiple files when any of these apply:
 
-- Shared context across multiple tasks would otherwise be duplicated.
-- Non-obvious constraints, edge cases, or decisions need to be explained once.
-- The work introduces domain concepts, APIs, data models, workflows, or architecture that deserve their own explanation.
+- Extensive shared context across multiple tasks would otherwise be duplicated.
+- The work introduces domain concepts, APIs, data models, workflows, or architecture that deserve their own design documents or explanations.
 - Several independently understandable tasks need different acceptance criteria or implementation notes.
 - The plan needs generic supporting context that is not itself a task contract.
 
@@ -58,8 +57,7 @@ A typical multi-file layout may look like this, but adapt names and files to the
 ```text
 plans/<slug>/
   index.md
-  <shared-topic>.md
-  <integration-topic>.md
+  <supporting-context>.md
   tasks/
     001-<task>.md
     002-<task>.md
@@ -78,15 +76,15 @@ Use the templates in `templates/` as starting points when helpful. Adapt heading
 
 Default conventions for implementation handoff plans:
 
-- Include an explicit task or checklist section for implementation work, usually `## Tasks`.
+- Include an explicit task or checklist section for implementation work under `## Tasks`.
 - Order tasks by dependency, then priority.
-- Make tasks meaningful implementation milestones, not tiny mechanical steps.
+- Every task must be a meaningful, atomic implementation milestone, not a small mechanical step.
 - Record observable acceptance criteria where they help autonomy.
 - Include verification guidance where the executor would otherwise have to guess.
 - Capture contracts and decisions over code choreography.
   - Good: `POST /widgets` with missing `name` returns 400 with `errors[0].field === "name"`. Validation uses the project's existing schema pattern.
   - Bad: In `widgets.ts`, add a `validateWidget(input)` function and call it at the top of the handler.
-- In task lists, keep task titles as plain text. If a task has its own file, add the markdown link after the title, e.g. `- [ ] Implement widget API ([task file](tasks/001-widget-api.md))`.
+- In task lists, keep task titles as plain text. If a task has its own file, add a markdown link after the task
 - Use normal markdown links for supporting docs unless the surrounding project already has a stronger convention.
 - Keep source pointers as breadcrumbs, not step-by-step implementation instructions.
 - If the artifact is a design note, investigation plan, or decision record rather than an implementation handoff, do not force `## Tasks`.
@@ -101,7 +99,7 @@ Check:
 - Scope, out-of-scope items, and important decisions are captured.
 - A fresh executor would know where to start.
 - Referenced local files exist.
-- Task/checklist structure is present when this is an implementation handoff plan.
+- Task/checklist structure is present (using `- [ ]` checkbox format)
 - Supporting docs are not accidentally written as task contracts.
 
 Fix obvious gaps before presenting.
@@ -117,7 +115,7 @@ Run a cold read by default for non-trivial or multi-file plans. It matters most 
 - the executor will need to work autonomously without asking follow-up questions;
 - the user asks for a "handoff", "implementation-ready", "thorough", or "autonomous" plan.
 
-Skip cold reads when the plan is small/local, still exploratory, mostly for the same person/session, or the latency/cost is disproportionate.
+Skip cold reads when the plan is small/local, or the latency/cost is disproportionate.
 
 Usually decide whether to run a cold read yourself and report it in the final summary. Ask the user first when the cold read would be materially slow or expensive.
 
