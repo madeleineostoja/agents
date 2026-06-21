@@ -112,7 +112,7 @@ Fix obvious gaps before presenting.
 
 ### 7. Optional cold read
 
-Cold reads are for executor autonomy, not mechanical markdown validation. They test whether someone without the original conversation can act from the artifact.
+Optionally delegate to a subagent for a cold read. Cold reads are for executor autonomy, not mechanical markdown validation. They test whether someone without the original conversation can act from the artifact.
 
 Run a cold read by default for non-trivial or multi-file plans. It matters most when:
 
@@ -123,11 +123,9 @@ Run a cold read by default for non-trivial or multi-file plans. It matters most 
 
 Skip cold reads when the plan is small/local, or the latency/cost is disproportionate.
 
-Usually decide whether to run a cold read yourself and report it in the final summary. Ask the user first when the cold read would be materially slow or expensive.
-
 Prompt shape:
 
-> Read the plan at `<path>` as a cold executor. Read-only validation only: do not edit, write, modify files, run tests, or execute the plan. You have no other context about this work. Assume the executor can do normal code exploration and run appropriate verification. Identify any blockers or material gaps that would prevent autonomous implementation. For each gap, include Location, Gap, and Why it matters. If there are no material gaps, say "Ready for autonomous execution, no material gaps".
+> Read the plan at `<path>` as a cold executor. Read-only validation only: do not edit, write, modify files, run tests, or execute the plan. You have no other context about this work. Assume the executor can do normal code exploration and run appropriate verification. Identify any blockers or material gaps in the plan. For each gap, include Location, Gap, and Why it matters. If there are no material gaps, say "Ready for autonomous execution, no material gaps".
 
 Act on cold-read feedback with judgment. Re-run at most once after substantive edits; if meaningful gaps remain, surface them to the user instead of looping.
 
