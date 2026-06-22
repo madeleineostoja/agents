@@ -74,16 +74,16 @@ plans/<slug>/
 
 Use the templates in `templates/` as starting points when helpful. Adapt headings to the work; do not force empty sections.
 
+Every task in a plan should be a meaningful, atomic milestone with an independently reviewable deliverable. Do not make small mechanical steps (such as tiny edits, updating imports, running validation, etc) top-level tasks; include them as sub-points, acceptance criteria, or verification guidance.
+
 #### Rules for plans:
 
 - Include an explciit checklist section for tasks, they MUST use the `- [ ]` markdown checkbox format
 - Include a heading for the task list, eg: `## Tasks`
-- Tasks should not be divided or grouped by subheadings
+- Task list should not be divided or grouped by subheadings
 - Tasks can have sub-points, as nested bullet points indented below the `- [ ]` task
+- Do not use checkboxes (`- [ ]`) for non-task sections, eg: Acceptance Criteria
 - Order tasks by dependency, then priority.
-- Every task must be a meaningful, atomic implementation milestone, not a small mechanical step.
-- Task titles must be plain text, if a task has its own file add a markdown link after the task.
-- If the artifact is not a "plan" file (index of multi-file plan, or a single-file plan document), do not force `- [ ]` task lists
 
 #### Guidance for plans:
 
@@ -92,7 +92,6 @@ Use the templates in `templates/` as starting points when helpful. Adapt heading
 - Capture contracts and decisions over code choreography.
   - Good: `POST /widgets` with missing `name` returns 400 with `errors[0].field === "name"`. Validation uses the project's existing schema pattern.
   - Bad: In `widgets.ts`, add a `validateWidget(input)` function and call it at the top of the handler.
-- Use normal markdown links for supporting docs unless the surrounding project already has a stronger convention.
 - Keep source pointers as breadcrumbs, not step-by-step implementation instructions.
 
 ### 6. Self-check
