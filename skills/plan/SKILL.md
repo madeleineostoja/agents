@@ -74,7 +74,7 @@ plans/<slug>/
 
 Use the templates in `templates/` as starting points when helpful. Adapt headings to the work; do not force empty sections.
 
-Every task in a plan should be a meaningful, atomic milestone with an independently reviewable deliverable. Do not make small mechanical steps (such as tiny edits, updating imports, running validation, etc) top-level tasks; include them as sub-points, acceptance criteria, or verification guidance.
+Every checkbox task must result a meaningful, independently reviewable deliverable. Do not make mechanical steps like running verification, altering git state, updating dependencies, etc top level tasks. Fold that work into sub-points, acceptance criteria, verification guidance, or context.
 
 #### Rules for plans:
 
@@ -104,7 +104,7 @@ Check:
 - Scope, out-of-scope items, and important decisions are captured.
 - A fresh executor would know where to start.
 - Referenced local files exist.
-- Task/checklist structure is present (using `- [ ]` checkbox format)
+- Task/checklist structure is present (using `- [ ]` checkbox format) and every task is a deliverable
 - Supporting docs are not accidentally written as task contracts.
 
 Fix obvious gaps before presenting.
