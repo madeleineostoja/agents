@@ -40,9 +40,3 @@ out=$(<cmd> 2>&1) && echo "<passed label>" || { printf '%s\n' "$out"; exit 1; }
 out=$(pnpm test 2>&1) && echo "tests pass" || { printf '%s\n' "$out"; exit 1; }
 out=$(tsc --noEmit 2>&1) && echo "typecheck clean" || { printf '%s\n' "$out"; exit 1; }
 ```
-
-## Subagents
-
-- Use the Explore subagent for non-trivial codebase discovery: locating symbols, tracing usage, answering "where is X / what references Y / what calls Z", or mapping patterns across files. Reach for it before running your own multi-step or wide grep/find sweeps; it keeps the main context lean. Skip it when a targeted read or two would answer the question — a single known file, an obvious local lookup, or a tiny edit; don't escalate that into a full Explore
-- Use the Review subagent as an independent second-pass reviewer for large, risky, or multi-file diffs during an active implementation session. Avoid delegating to Review in a fresh session where the user’s main request is already a review; you have no context to isolate from, so review the artifact directly
-- Use General purpose subagents only for well-scoped parallel work with clear boundaries
