@@ -74,15 +74,31 @@ plans/<slug>/
 
 Use the templates in `templates/` as starting points when helpful. Adapt headings to the work; do not force empty sections.
 
-Every checkbox task must result a meaningful, independently reviewable deliverable. Do not make mechanical steps like running verification, altering git state, updating dependencies, etc top level tasks. Fold that work into sub-points, acceptance criteria, verification guidance, or context.
+Design each checkbox task as one cohesive change that can be implemented, verified, reviewed, and committed in a focused work cycle. Assuming earlier tasks are complete, it should leave the repository in a coherent state with a meaningful outcome. A task file may add detail, but must not hide an oversized task.
+
+#### Task sizing
+
+Use a logical commit as the default unit of work, not a file, architectural layer, or implementation phase. Prefer a vertical slice containing the code, tests, migrations, and documentation needed for its outcome.
+
+Split a task when any of these apply:
+
+- It delivers multiple outcomes that could be accepted or committed independently.
+- It crosses distinct subsystems or contracts that can be changed and verified separately.
+- It combines preparatory refactoring, migration, or infrastructure work with behavior that does not need to land atomically.
+- Its acceptance criteria form several unrelated clusters, or reviewing it requires switching between materially different concerns, risks, or rollout strategies.
+- A capable executor is unlikely to implement and review it in one focused work cycle without losing context.
+
+Do not create a separate checkbox for a tiny edit, helper, import update, routine test coverage, validation run, git operation, or other mechanical step. Fold these into the task they support. Tests, documentation, dependency changes, migrations, or investigation are standalone tasks only when they produce a substantive independently reviewable outcome of their own.
+
+Keep a larger task intact only when splitting it would create an invalid intermediate state or obscure a single atomic contract change. State that coupling explicitly in the task so the executor and reviewer understand why it cannot be divided.
 
 #### Rules for plans:
 
-- Include an explciit checklist section for tasks, they MUST use the `- [ ]` markdown checkbox format
-- Include a heading for the task list, eg: `## Tasks`
-- Task list should not be divided or grouped by subheadings
-- Tasks can have sub-points, as nested bullet points indented below the `- [ ]` task
-- Do not use checkboxes (`- [ ]`) for non-task sections, eg: Acceptance Criteria
+- Include an explicit checklist section for tasks; tasks MUST use the `- [ ]` markdown checkbox format.
+- Include a heading for the task list, eg: `## Tasks`.
+- Do not divide or group the task list with subheadings.
+- Tasks can have sub-points as nested bullets indented below the `- [ ]` task.
+- Do not use checkboxes (`- [ ]`) for non-task sections, eg: Acceptance Criteria.
 - Order tasks by dependency, then priority.
 
 #### Guidance for plans:
@@ -104,7 +120,9 @@ Check:
 - Scope, out-of-scope items, and important decisions are captured.
 - A fresh executor would know where to start.
 - Referenced local files exist.
-- Task/checklist structure is present (using `- [ ]` checkbox format) and every task is a deliverable
+- Task/checklist structure is present (using `- [ ]` checkbox format) and every task is a deliverable.
+- Each task fits one focused implementation/review cycle and logical commit, unless an explicitly documented atomicity constraint prevents splitting it.
+- No task is merely a mechanical, validation-only, or bookkeeping step.
 - Supporting docs are not accidentally written as task contracts.
 
 Fix obvious gaps before presenting.
