@@ -17,13 +17,19 @@ A plan is a handoff document, not a permanent specification system. Avoid unnece
 
 Resolve open requirements, scope boundaries, edge cases, and tradeoffs in conversation. Ask the user directly in prose for gaps that matter. **Do not finish the plan with unresolved user-facing questions.**
 
+Clarification should resolve ambiguity in the current outcome, not expand it. Do not promote plausible future needs or theoretical edge cases into scope. A possibility becomes a requirement only when grounded in the user's stated goal, existing behaviour or API contract, repository architecture or convention, explicit acceptance criteria, a real trust boundary, a demonstrated failure, or a material correctness, safety, data-integrity, or operational risk.
+
 If invoked cold, spend extra time here. If invoked after prior discussion, preserve the decisions already made instead of reopening them.
 
 **Investigation tasks are the only allowed escape hatch.** Use them only when the answer genuinely requires implementation or runtime evidence — never as a way to defer a decision the user could make in conversation. Label them explicitly, give concrete acceptance, and make them produce a recorded decision or choose between already-described branches.
 
 ### 2. Explore
 
-Explore enough to understand existing patterns, integration points, constraints, and whether the requested work already exists. Never assume functionality is absent — check. Stop when more exploration is unlikely to change the plan.
+Explore enough to understand existing patterns, integration points, constraints, and whether the requested work already exists. Never assume functionality is absent — check.
+
+When evaluating an implementation area, identify relevant existing project implementations, framework or platform capabilities, standard-library facilities, and installed dependencies. Record only capabilities and options that materially affect requirements, architecture, task boundaries, or the solution class.
+
+Exploration discovers options and constraints; it does not create requirements. Stop when further discovery is unlikely to change requirements, architecture, task boundaries, or the solution class.
 
 The output can be informal while exploring: notes, file pointers, discovered patterns, and constraints. Use these when writing the artifact.
 
@@ -74,6 +80,10 @@ plans/<slug>/
 
 Use the templates in `templates/` as starting points when helpful. Adapt headings to the work; do not force empty sections.
 
+Keep contracts grounded in current requirements, existing behaviour, established architecture, and material risks. Do not turn plausible future needs or theoretical edge cases into acceptance criteria.
+
+Where solution choice materially affects maintenance surface, record the intended solution class or its decision criteria: reuse existing project code, use a framework or platform capability, use an installed dependency, add a dependency, or implement locally. Require a concrete present-purpose rationale when the plan introduces a new subsystem, abstraction boundary, compatibility layer, configurable mechanism, or substantial custom implementation.
+
 Design each checkbox task as one cohesive change that can be implemented, verified, reviewed, and committed in a focused work cycle. Assuming earlier tasks are complete, it should leave the repository in a coherent state with a meaningful outcome. A task file may add detail, but must not hide an oversized task.
 
 #### Task sizing
@@ -104,10 +114,11 @@ Keep a larger task intact only when splitting it would create an invalid interme
 #### Guidance for plans:
 
 - Record observable acceptance criteria where they help autonomy.
-- Include verification guidance where the executor would otherwise have to guess.
+- Include verification guidance where the executor would otherwise have to guess. Keep it proportional to changed behaviour and material risk; do not prescribe exhaustive matrices unless distinct failure modes or their impact justify them.
 - Capture contracts and decisions over code choreography.
   - Good: `POST /widgets` with missing `name` returns 400 with `errors[0].field === "name"`. Validation uses the project's existing schema pattern.
   - Bad: In `widgets.ts`, add a `validateWidget(input)` function and call it at the top of the handler.
+- State implementation constraints only when required by the contract, existing architecture, or material risk. Leave the executor free to choose a simpler implementation that satisfies the same observable contract.
 - Keep source pointers as breadcrumbs, not step-by-step implementation instructions.
 
 ### 6. Self-check
@@ -118,6 +129,12 @@ Check:
 
 - No unresolved user-facing questions remain.
 - Scope, out-of-scope items, and important decisions are captured.
+- Every requirement and acceptance criterion is grounded in the current requirements, an existing repository contract, or a material risk.
+- No task or planned mechanism exists solely for speculative flexibility, compatibility, or configuration.
+- Every planned subsystem, abstraction boundary, or substantial custom implementation has a concrete present purpose and rationale.
+- Existing project and ecosystem capabilities were considered where discovery was warranted.
+- Verification guidance is proportional to changed behaviour and material risk.
+- The plan does not force unnecessary machinery, and a simpler implementation remains valid when it satisfies the same contract and constraints.
 - A fresh executor would know where to start.
 - Referenced local files exist.
 - Task/checklist structure is present (using `- [ ]` checkbox format) and every task is a deliverable.

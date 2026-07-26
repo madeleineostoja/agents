@@ -16,15 +16,15 @@ Why this is needed, relevant background, and how it fits into the existing syste
 
 ## Acceptance Criteria
 
-- Observable criterion, with verification guidance where useful.
+- Observable criterion grounded in the current contract or a material risk, with verification guidance where useful.
 
 ## Decisions
 
-- Decisions already made that the executor should not have to re-derive.
+- Decisions already made that the executor should not have to re-derive, including material solution-class choices and rationale for substantial new machinery.
 
 ## Implementation Notes
 
-File pointers, existing patterns, constraints, and useful breadcrumbs.
+File pointers, existing patterns and capabilities, reuse opportunities, constraints, and useful breadcrumbs.
 
 ## Tasks
 

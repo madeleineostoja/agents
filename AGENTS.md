@@ -3,6 +3,15 @@
 - Default to writing no code comments. Only add one when the "why" is non-obvious — a hidden constraint, subtle invariant, bug workaround, or surprising behaviour. Don't restate what the code does, don't label sections, don't annotate every change
 - Before starting edits, summarize intended changes and ask for confirmation unless the user clearly asked you to create or modify files
 
+## Engineering economy
+
+- Prefer the smallest coherent change that satisfies current requirements and fits the repository's existing architecture; minimise new behaviour and concepts the project must own, not raw line or file count
+- Before adding a non-trivial custom mechanism, inspect relevant nearby code and check for an existing project implementation, framework or platform capability, standard-library facility, or suitable installed dependency; reuse one when it materially satisfies the requirements and local constraints
+- Do not add speculative flexibility, compatibility, configuration, abstractions, or edge-case handling without a current requirement, established repository contract, real trust boundary, or other material demonstrated risk
+- Do not bypass stable boundaries or compress clear conventional code merely to make a diff smaller
+- A mature dependency is acceptable when repository policy permits it and it removes a meaningful maintenance domain; prefer local code when the required semantics are small and the dependency burden would be disproportionate
+- Keep verification proportional to changed behaviour and material risk, following the repository's existing testing and validation conventions
+
 ## Tool preferences
 
 The following non-standard CLI tools are available; prefer them over the defaults:

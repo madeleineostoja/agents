@@ -12,11 +12,11 @@ What this task should accomplish.
 
 ## Acceptance Criteria
 
-- Observable criterion, with verification guidance where useful.
+- Observable criterion grounded in the current contract or a material risk, with verification guidance where useful.
 
 ## Implementation Notes
 
-Relevant file pointers, existing patterns, constraints, and task-specific decisions.
+Relevant file pointers, existing patterns and capabilities, reuse opportunities, constraints, and task-specific decisions or rationale.
 
 ## Source Context
 
