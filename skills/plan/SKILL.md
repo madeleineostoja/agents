@@ -148,7 +148,7 @@ Fix obvious gaps before presenting.
 
 Optionally delegate to a subagent for a cold read. Cold reads are for executor autonomy, not mechanical markdown validation. They test whether someone without the original conversation can act from the artifact.
 
-Run a cold read by default for non-trivial or multi-file plans. It matters most when:
+Run a cold read when decision density, cross-cutting contracts, or autonomy requirements create a meaningful risk that important context was not captured. Plan size or file count alone is not sufficient. It matters most when:
 
 - the work is cross-cutting, architecture-heavy, security-sensitive, destructive, concurrent, persistent, or public-API-facing;
 - the authoring conversation had lots of decisions that may not be captured cleanly;
@@ -159,7 +159,15 @@ Skip cold reads when the plan is small/local, or the latency/cost is disproporti
 
 Prompt shape:
 
-> Read the plan at `<path>` as a cold executor. Read-only validation only: do not edit, write, modify files, run tests, or execute the plan. You have no other context about this work. Assume the executor can do normal code exploration and run appropriate verification. Identify any blockers or material gaps in the plan. For each gap, include Location, Gap, and Why it matters. If there are no material gaps, say "Ready for autonomous execution, no material gaps".
+> Read the plan at `<path>` as a fresh executor and assess whether it provides an autonomous, implementation-ready handoff. Read-only validation only: do not edit, write, modify files, run tests, or execute the plan. You have no other context about this work. Read all plan files. Inspect referenced source and perform limited repository exploration only where needed to validate a material concern about the plan.
+>
+> This is a review of the handoff, not an independent implementation investigation. Do not attempt to fully understand the affected system, derive your own implementation design, or exhaustively verify every claim. Assume a capable executor can perform ordinary code exploration, run appropriate verification, and make local implementation decisions.
+>
+> Focus on gaps likely to cause the executor to choose the wrong solution class, violate a contract, require missing product input, restructure the tasks materially, or become blocked. Do not report details that can safely be resolved during normal implementation. Stop once you can determine whether the plan has material handoff gaps; do not continue exploring merely to increase confidence or completeness.
+>
+> For each material gap, include Location, Gap, and Why it matters. If there are no material gaps, say "Ready for autonomous execution, no material gaps".
+
+Cold-read effort should be materially smaller than plan authoring or implementation. If validating a concern requires broad subsystem reconstruction, report the concern or recommend a separate deep review rather than performing one.
 
 Act on cold-read feedback with judgment. Re-run at most once after substantive edits; if meaningful gaps remain, surface them to the user instead of looping.
 
