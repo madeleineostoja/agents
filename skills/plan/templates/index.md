@@ -1,20 +1,34 @@
-<!-- Starter template — delete any section you don't need and rename headings to fit the work. -->
+<!-- Starter template — preserve the approved direction, but delete or combine sections that are not useful for this work. -->
 
 # {Title}
 
-Short summary of the overall work and desired outcome.
+## Outcome
+
+What the completed work enables and how success will be recognized.
 
 ## Context
 
-Background, constraints, and links to supporting docs that apply across tasks.
+Background, constraints, and links to supporting documents that apply across tasks.
 
-## Goals
+## Experience and behaviour
 
-- What the plan should accomplish.
+Approved user, developer, or operator workflows, states, defaults, errors, recovery behaviour, accessibility, or degraded operation that tasks must preserve.
 
-## Out of Scope
+## Contract surface
 
-- Notable exclusions, if any.
+Approved interfaces, schemas, commands, events, configuration, persisted formats, migrations, or compatibility commitments.
+
+## Solution design and decisions
+
+Major boundaries, dependencies, solution-class choices, and links to detailed supporting documents.
+
+## Non-goals
+
+- Work deliberately excluded from this plan.
+
+## Risks and assumptions
+
+- Material uncertainty, external dependencies, or facts not yet proven.
 
 ## Tasks
 

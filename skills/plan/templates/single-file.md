@@ -1,26 +1,38 @@
-<!-- Starter template — delete any section you don't need and rename headings to fit the work. -->
+<!-- Starter template — preserve the approved direction, but delete or combine sections that are not useful for this work. -->
 
 # {Title}
+
+## Outcome
+
+What the completed work enables and how success will be recognized.
 
 ## Context
 
 Why this is needed, relevant background, and how it fits into the existing system.
 
-## Goals
+## Experience and behaviour
 
-- What the work should accomplish.
+Approved user, developer, or operator workflows, states, defaults, errors, recovery behaviour, accessibility, or degraded operation the implementation must preserve.
 
-## Out of Scope
+## Contract surface
 
-- Notable exclusions, if any.
+Approved interfaces, schemas, commands, events, configuration, persisted formats, migrations, or compatibility commitments.
+
+## Solution design and decisions
+
+Major boundaries, dependencies, solution-class choices, and rationale the executor should not have to re-derive.
+
+## Non-goals
+
+- Work deliberately excluded from this plan.
+
+## Risks and assumptions
+
+- Material uncertainty, external dependencies, or facts not yet proven.
 
 ## Acceptance Criteria
 
-- Observable criterion grounded in the current contract or a material risk, with verification guidance where useful.
-
-## Decisions
-
-- Decisions already made that the executor should not have to re-derive, including material solution-class choices and rationale for substantial new machinery.
+- Observable criterion grounded in the approved outcome, current contract, or a material risk, with verification guidance where useful.
 
 ## Implementation Notes
 

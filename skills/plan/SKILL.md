@@ -11,7 +11,9 @@ The artifact is the point. Do the heavy thinking here: clarify ambiguity, explor
 
 A plan is a handoff document, not a permanent specification system. Avoid unnecessary process, taxonomy, or maintenance structure unless the work actually needs it.
 
-## Process
+Detailed plans serve executors, but users should not have to inspect all executor-facing detail to govern the outcome. Before writing the artifact, present a concise approval digest of the decisions it will encode. The digest is a conversational approval surface, not a separate permanent artifact; carry its approved content into the plan's human-readable entry point.
+
+## Authoring process
 
 ### 1. Clarify
 
@@ -19,7 +21,7 @@ Resolve open requirements, scope boundaries, edge cases, and tradeoffs in conver
 
 Clarification should resolve ambiguity in the current outcome, not expand it. Do not promote plausible future needs or theoretical edge cases into scope. A possibility becomes a requirement only when grounded in the user's stated goal, existing behaviour or API contract, repository architecture or convention, explicit acceptance criteria, a real trust boundary, a demonstrated failure, or a material correctness, safety, data-integrity, or operational risk.
 
-If invoked cold, spend extra time here. If invoked after prior discussion, preserve the decisions already made instead of reopening them.
+If invoked without prior discussion, spend extra time here. If invoked after prior discussion, preserve the decisions already made instead of reopening them.
 
 **Investigation tasks are the only allowed escape hatch.** Use them only when the answer genuinely requires implementation or runtime evidence — never as a way to defer a decision the user could make in conversation. Label them explicitly, give concrete acceptance, and make them produce a recorded decision or choose between already-described branches.
 
@@ -33,7 +35,21 @@ Exploration discovers options and constraints; it does not create requirements. 
 
 The output can be informal while exploring: notes, file pointers, discovered patterns, and constraints. Use these when writing the artifact.
 
-### 3. Choose shape
+### 3. Prepare an approval digest
+
+Before writing or finalizing the detailed plan, prepare a concise, decision-complete, implementation-light summary of what the plan will encode. A substantial digest should normally fit within roughly 300–800 words. For small, local work, a short paragraph covering the outcome, scope, and non-goals is enough.
+
+Use only the sections relevant to the work. Do not force empty or `N/A` sections. Cover material decisions from these areas:
+
+- **Outcome** — what the completed work enables and how success will be recognized.
+- **Experience and behaviour** — affected user, developer, or operator flows, states, errors, defaults, recovery, accessibility, and degraded operation.
+- **Contract surface** — affected public APIs, internal extension interfaces, schemas, CLI commands, tools, events, configuration, persisted formats, migrations, compatibility commitments, or other relied-upon behaviour.
+- **Solution design** — major system boundaries, dependencies, solution-class decisions, new concepts, and expensive-to-reverse choices.
+- **Non-goals** — what the work deliberately does not solve.
+- **Delivery map** — substantive milestones, dependencies, and proposed sequencing without implementation choreography.
+- **Risks and assumptions** — material uncertainty, external dependencies, and facts not yet proven.
+
+#### Propose plan shape
 
 Use the lightest shape that preserves autonomy.
 
@@ -69,16 +85,26 @@ plans/<slug>/
     002-<task>.md
 ```
 
-### 4. Choose location
+#### Propose plan location
 
 - Detect whether the repo already has `plans/`, `docs/plans/`, `tmp/plans/`, or similar. Use existing conventions when present.
 - Otherwise default to `plan-<slug>.md` for a single file, or `plans/<slug>/` for multi-file plans.
-- Confirm the path with the user before writing. Never write to an unconfirmed path.
-- Never overwrite an existing plan artifact without explicit confirmation.
+- Include the proposed shape and base path in the approval digest: the plan file for a single-file plan, or the plan directory for a multi-file plan.
+- If writing the plan would overwrite existing files, explicitly identify that approving the digest would authorize it.
+
+### 4. Obtain approval
+
+Present the digest, proposed plan shape, and base path together. Ask the user to approve or correct them before writing any plan files.
+
+Approval covers the outcome, scope, overall solution design, user, developer, and operator experience, relied-upon interfaces, material risks, and delivery shape. Detailed implementation decisions remain with the executor and do not require approval.
+
+When prior conversation already contains explicit approval of material decisions, summarize them rather than reopening them, but still wait for approval of the digest and base path. Never write to an unconfirmed base path or overwrite existing plan files without explicit confirmation.
 
 ### 5. Write
 
 Use the templates in `templates/` as starting points when helpful. Adapt headings to the work; do not force empty sections.
+
+Treat the approved digest as the boundary for the detailed plan. Preserve its outcome and material decisions in the single plan file or multi-file index so that document remains the human-readable entry point. If further research would materially change the outcome, scope, solution design, user, developer, or operator experience, relied-upon interfaces, material risks, delivery shape, or base path, stop and present a revised digest for approval rather than silently embedding the change.
 
 Keep contracts grounded in current requirements, existing behaviour, established architecture, and material risks. Do not turn plausible future needs or theoretical edge cases into acceptance criteria.
 
@@ -128,6 +154,8 @@ Before presenting, read the artifact as if you were a fresh executor.
 Check:
 
 - No unresolved user-facing questions remain.
+- The plan matches the approved digest, and its human-readable entry point preserves the approved outcome and material decisions.
+- No approved scope boundary, experience or behaviour, relied-upon interface, solution-design decision, non-goal, material risk, or delivery shape was silently changed after approval.
 - Scope, out-of-scope items, and important decisions are captured.
 - Every requirement and acceptance criterion is grounded in the current requirements, an existing repository contract, or a material risk.
 - No task or planned mechanism exists solely for speculative flexibility, compatibility, or configuration.
@@ -144,43 +172,15 @@ Check:
 
 Fix obvious gaps before presenting.
 
-### 7. Optional cold read
-
-Optionally delegate to a subagent for a cold read. Cold reads are for executor autonomy, not mechanical markdown validation. They test whether someone without the original conversation can act from the artifact.
-
-Run a cold read when decision density, cross-cutting contracts, or autonomy requirements create a meaningful risk that important context was not captured. Plan size or file count alone is not sufficient. It matters most when:
-
-- the work is cross-cutting, architecture-heavy, security-sensitive, destructive, concurrent, persistent, or public-API-facing;
-- the authoring conversation had lots of decisions that may not be captured cleanly;
-- the executor will need to work autonomously without asking follow-up questions;
-- the user asks for a "handoff", "implementation-ready", "thorough", or "autonomous" plan.
-
-Skip cold reads when the plan is small/local, or the latency/cost is disproportionate.
-
-Prompt shape:
-
-> Read the plan at `<path>` as a fresh executor and assess whether it provides an autonomous, implementation-ready handoff. Read-only validation only: do not edit, write, modify files, run tests, or execute the plan. You have no other context about this work. Read all plan files. Inspect referenced source and perform limited repository exploration only where needed to validate a material concern about the plan.
->
-> This is a review of the handoff, not an independent implementation investigation. Do not attempt to fully understand the affected system, derive your own implementation design, or exhaustively verify every claim. Assume a capable executor can perform ordinary code exploration, run appropriate verification, and make local implementation decisions.
->
-> Focus on gaps likely to cause the executor to choose the wrong solution class, violate a contract, require missing product input, restructure the tasks materially, or become blocked. Do not report details that can safely be resolved during normal implementation. Stop once you can determine whether the plan has material handoff gaps; do not continue exploring merely to increase confidence or completeness.
->
-> For each material gap, include Location, Gap, and Why it matters. If there are no material gaps, say "Ready for autonomous execution, no material gaps".
-
-Cold-read effort should be materially smaller than plan authoring or implementation. If validating a concern requires broad subsystem reconstruction, report the concern or recommend a separate deep review rather than performing one.
-
-Act on cold-read feedback with judgment. Re-run at most once after substantive edits; if meaningful gaps remain, surface them to the user instead of looping.
-
-### 8. Present
+### 7. Present
 
 End with a concise summary, not a full dump unless requested.
 
 Include:
 
 - Plan file path(s) created.
-- One-sentence goal of the plan.
+- The approved outcome.
 - Task count and notable supporting files, if any.
 - Known non-blocking risks, assumptions, or follow-up decisions, if present.
-- Whether a cold read was run and what changed because of it.
 
-Offer to show or revise specific files and iterate until approved.
+Offer to show or revise specific files if requested.
