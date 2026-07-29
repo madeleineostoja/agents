@@ -22,6 +22,7 @@ The following non-standard CLI tools are available; prefer them over the default
 
 ## Commit preferences
 
+- Never force-add or commit a file ignored by Git
 - Follow a lightweight Conventional Commit pattern for commit messages: `<type>: <brief description>`
 - Add a scope (ie: `<type>(scope):`) only if it adds meaningful clarity, eg: when the commit targets one package in a monorepo of many
 - Add a body (ie: after a blank line) only if there is non-obvious context not inferable from the main message
