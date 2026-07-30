@@ -12,7 +12,7 @@
 - A mature dependency is acceptable when repository policy permits it and it removes a meaningful maintenance domain; prefer local code when the required semantics are small and the dependency burden would be disproportionate
 - Keep verification proportional to changed behaviour and material risk, following the repository's existing testing and validation conventions
 
-## Tool preferences
+## Tool guidance
 
 The following non-standard CLI tools are available; prefer them over the defaults:
 
@@ -20,14 +20,14 @@ The following non-standard CLI tools are available; prefer them over the default
 - Prefer `fd` instead of `find` (example: `fd "filename"` instead of `find . -name "filename"`)
 - Infer the package manager from the project lockfile; if no lockfile exists, fall back to system defaults (eg: npm)
 
-## Commit preferences
+## Commit guidance
 
-- Never force-add or commit a file ignored by Git
+- NEVER force-add or commit a file ignored by Git, including files in ignored parent folders
 - Follow a lightweight Conventional Commit pattern for commit messages: `<type>: <brief description>`
-- Add a scope (ie: `<type>(scope):`) only if it adds meaningful clarity, eg: when the commit targets one package in a monorepo of many
+- Add a scope (ie: `<type>(scope):`) ONLY if it adds meaningful clarity, eg: when the commit targets one package in a monorepo of many packages
 - Add a body (ie: after a blank line) only if there is non-obvious context not inferable from the main message
 
-## Testing preferences
+## Testing guidance
 
 - Tests must verify behaviour, not restate implementation. Before adding a test, be able to identify the real bug or regression it would catch; if you can't, skip it.
 - Test public contracts and observable outcomes, not internals; skip trivial formatters, stdlib wrappers, and pass-through helpers unless they encode important behaviour. Assert mock/fake internals only when that interaction is itself the contract.
