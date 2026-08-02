@@ -7,7 +7,9 @@ description: Produce a written implementation handoff plan that a future executo
 
 Produce a human-readable plan artifact that captures the goal, constraints, decisions, tradeoffs, and work breakdown well enough for a future executor — human, agent, or automation — to act autonomously without re-deriving the original conversation.
 
-The artifact is the point. Do the heavy thinking here: clarify ambiguity, explore the existing system, record decisions, identify edge cases, and write the plan so it reads cold.
+A fresh executor has the repository and completed plan artifacts, but not the original conversation or approval exchange. They may inspect source code and choose ordinary implementation details. They must not need to reconstruct user intent, reopen approved product or architecture decisions, infer material scope boundaries, or repeat the planning process.
+
+The artifact is the point. Do the heavy thinking here: clarify ambiguity, investigate the existing system, record decisions, identify edge cases, and write a decision-complete handoff.
 
 A plan is a handoff document, not a permanent specification system. Avoid unnecessary process, taxonomy, or maintenance structure unless the work actually needs it.
 
@@ -25,15 +27,15 @@ If invoked without prior discussion, spend extra time here. If invoked after pri
 
 **Investigation tasks are the only allowed escape hatch.** Use them only when the answer genuinely requires implementation or runtime evidence — never as a way to defer a decision the user could make in conversation. Label them explicitly, give concrete acceptance, and make them produce a recorded decision or choose between already-described branches.
 
-### 2. Explore
+### 2. Investigate
 
-Explore enough to understand existing patterns, integration points, constraints, and whether the requested work already exists. Never assume functionality is absent — check.
+Investigate enough to understand existing patterns, integration points, constraints, and whether the requested work already exists. Never assume functionality is absent — check. Use the normal discovery tools and delegation guidance; this phase does not require an Explore subagent.
 
 When evaluating an implementation area, identify relevant existing project implementations, framework or platform capabilities, standard-library facilities, and installed dependencies. Record only capabilities and options that materially affect requirements, architecture, task boundaries, or the solution class.
 
-Exploration discovers options and constraints; it does not create requirements. Stop when further discovery is unlikely to change requirements, architecture, task boundaries, or the solution class.
+Investigation discovers options and constraints; it does not create requirements. Stop when further discovery is unlikely to change requirements, architecture, task boundaries, or the solution class.
 
-The output can be informal while exploring: notes, file pointers, discovered patterns, and constraints. Use these when writing the artifact.
+The output can be informal while investigating: notes, file pointers, discovered patterns, and constraints. Use these when writing the artifact.
 
 ### 3. Prepare an approval digest
 
@@ -149,7 +151,7 @@ Keep a larger task intact only when splitting it would create an invalid interme
 
 ### 6. Self-check
 
-Before presenting, read the artifact as if you were a fresh executor.
+Before presenting, perform one artifact-bounded handoff pass. Start from the plan's human-readable entry point and read all completed plan artifacts as a fresh executor. Test whether they transfer the approved direction; do not restart repository investigation, reconsider approved decisions, or develop an alternative plan. Follow a source reference only when needed to resolve a concrete concern raised by the artifact.
 
 Check:
 
@@ -170,9 +172,31 @@ Check:
 - No task is merely a mechanical, validation-only, or bookkeeping step.
 - Supporting docs are not accidentally written as task contracts.
 
-Fix obvious gaps before presenting.
+Fix obvious transfer gaps that remain within the approved digest. If a fix would materially change the approved outcome, scope, solution design, experience, contract surface, risks, delivery shape, or base path, stop and present a revised digest for approval. Do not begin another general review cycle after making corrections.
 
-### 7. Present
+### 7. Run risk-triggered independent review
+
+Do not delegate a cold read by default. Run one independent Review only when at least one of these applies:
+
+- The plan changes an existing public, persisted, or compatibility-sensitive contract.
+- It includes destructive or difficult-to-reverse migration, rollout, or cutover work.
+- It crosses an authorization, security, privacy, or other trust boundary.
+- It coordinates independently delivered workstreams whose sequencing or shared contracts could leave the system inconsistent.
+- The user explicitly requests independent review.
+
+Plan length, task count, a multi-file shape, or the number of implementation files do not independently trigger review.
+
+Use a Review subagent, never Explore. Give it the completed plan path or paths, but not the original conversation, approval exchange, or a separate digest. The review is plan-led and source-verified:
+
+1. Read all supplied plan artifacts before inspecting source.
+2. Assess handoff completeness, internal consistency, task dependencies, contract coverage, and whether material decisions are improperly left to the executor.
+3. Perform only minimal, targeted source checks needed to verify a concrete claim or resolve a specific handoff concern raised by the plan. Every source lookup must answer an already-identified review question. If that would require broad subsystem exploration, report the uncertainty instead of starting another investigation phase.
+4. Do not reconsider approved product or architecture decisions, search for alternative solutions, expand scope, rewrite the plan, or produce a replacement plan.
+5. Return either `Ready` or a concise list of concrete blockers. Tie each blocker to an affected plan location and include any source evidence used.
+
+Apply valid transfer fixes once when they remain within the approved digest. If review exposes a required material change, present a revised digest for user approval. Do not send the corrected artifact through another independent review cycle.
+
+### 8. Present
 
 End with a concise summary, not a full dump unless requested.
 
