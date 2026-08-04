@@ -1,7 +1,7 @@
 ## General rules
 
-- Default to writing no code comments. Only add one when the "why" is non-obvious — a hidden constraint, subtle invariant, bug workaround, or surprising behaviour. Don't restate what the code does, don't label sections, don't annotate every change
-- Before starting edits, summarize intended changes and ask for confirmation unless the user clearly asked you to create or modify files
+- Match the surrounding code’s comment density and style. Add comments when they explain a non-obvious constraint, invariant, workaround, or design tradeoff; do not narrate straightforward code.
+- State the intended change before editing when scope, authorization, or the requested outcome is ambiguous
 
 ## Tools
 
