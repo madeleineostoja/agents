@@ -1,9 +1,11 @@
 ---
 name: plan
-description: Produce a written implementation handoff plan that a future executor can use without relying on the original conversation. Use only when the user explicitly asks to plan something (e.g. "/plan", "plan this", "spec this out"), or after confirming that planning is the right next step rather than execution.
+description: Write a self-contained implementation plan that an autonomous executor can follow without access to the original conversation. Use only when the user specifically requests an executor-ready plan—not for conversational planning, implementation approaches, task breakdowns, checklists, or requests that merely mention "plan" or "spec".
 ---
 
 # Plan
+
+Use this workflow only when the requested output is an executor-ready plan file for autonomous execution in a separate context. If the skill was loaded from generic planning language, do not apply this workflow, create plan files, or introduce its approval process; respond to the request normally.
 
 Produce a human-readable plan artifact that captures the goal, constraints, decisions, tradeoffs, and work breakdown well enough for a future executor — human, agent, or automation — to act autonomously without re-deriving the original conversation.
 
