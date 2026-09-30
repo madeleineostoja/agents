@@ -34,6 +34,13 @@ The following non-standard CLI tools are available; prefer them over the default
 - Prioritise (in order): error/rejection paths, state invariants, data integrity, cross-component contracts, safety/security boundaries, and non-trivial heuristics.
 - When touching tests, consolidate or remove nearby low-value tests instead of adding more noise.
 
+## Tool orchestration
+
+- Prefer a direct tool call for a single operation when the tool is directly available.
+- Use codemode to batch independent calls, chain dependent calls, process results before returning them, or access tools available only through codemode.
+- Do not wrap a single call in codemode merely to print its unchanged result.
+- Multiple shell commands inside one Bash invocation still constitute one tool call; they do not by themselves justify codemode.
+
 ## Code conventions
 
 - In TypeScript projects, prefer `type` over `interface` unless features of interfaces (eg: declaration merging) are strictly required
