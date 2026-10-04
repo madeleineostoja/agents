@@ -13,6 +13,10 @@ A fresh executor has the repository and completed plan artifacts, but not the or
 
 The artifact is the point. Do the heavy thinking here: clarify ambiguity, investigate the existing system, record decisions, identify edge cases, and write a decision-complete handoff.
 
+Resolve and record all material solution-design decisions before finalizing. Specify the selected approach, component responsibilities and ownership boundaries, required behaviour, and compatibility commitments where affected. Vague directives such as “choose an appropriate approach” or an unselected menu of alternatives are not decisions.
+
+Executors may choose code and function shape, symbols, signatures, internal organization, and other ordinary implementation details within the specified design and existing contracts. They must not settle solution design or infer required behaviour. Investigate missing evidence during planning; ask the user when intent or approval is needed.
+
 A plan is a handoff document, not a permanent specification system. Avoid unnecessary process, taxonomy, or maintenance structure unless the work actually needs it.
 
 Detailed plans serve executors, but users should not have to inspect all executor-facing detail to govern the outcome. Before writing the artifact, present a concise approval digest of the decisions it will encode. The digest is a conversational approval surface, not a separate permanent artifact; carry its approved content into the plan's human-readable entry point.
@@ -21,13 +25,13 @@ Detailed plans serve executors, but users should not have to inspect all executo
 
 ### 1. Clarify
 
-Resolve open requirements, scope boundaries, edge cases, and tradeoffs in conversation. Ask the user directly in prose for gaps that matter. **Do not finish the plan with unresolved user-facing questions.**
+Resolve open requirements, scope boundaries, edge cases, and tradeoffs in conversation. Ask the user directly in prose for gaps that matter. **Do not finalize the plan with unresolved requirements, material decisions, or ambiguities that could change required behaviour, ownership boundaries, compatibility, scope, or the selected solution design.**
 
 Clarification should resolve ambiguity in the current outcome, not expand it. Do not promote plausible future needs or theoretical edge cases into scope. A possibility becomes a requirement only when grounded in the user's stated goal, existing behaviour or API contract, repository architecture or convention, explicit acceptance criteria, a real trust boundary, a demonstrated failure, or a material correctness, safety, data-integrity, or operational risk.
 
 If invoked without prior discussion, spend extra time here. If invoked after prior discussion, preserve the decisions already made instead of reopening them.
 
-**Investigation tasks are the only allowed escape hatch.** Use them only when the answer genuinely requires implementation or runtime evidence — never as a way to defer a decision the user could make in conversation. Label them explicitly, give concrete acceptance, and make them produce a recorded decision or choose between already-described branches.
+**Investigation tasks must not defer solution design.** Use them only when verification genuinely requires implementation or runtime evidence. They may verify a settled design or determine which fully specified conditional branch applies. Label them explicitly, give concrete acceptance, and specify the evidence to collect, the selection rule, and the resulting action for each supported outcome. If required evidence cannot be obtained during planning and the resulting design decisions cannot be specified in advance, stop and explain what remains unresolved rather than present the implementation plan as complete.
 
 ### 2. Investigate
 
@@ -100,7 +104,7 @@ plans/<slug>/
 
 Present the digest, proposed plan shape, and base path together. Ask the user to approve or correct them before writing any plan files.
 
-Approval covers the outcome, scope, overall solution design, user, developer, and operator experience, relied-upon interfaces, material risks, and delivery shape. Detailed implementation decisions remain with the executor and do not require approval.
+Approval covers the outcome, scope, overall solution design, user, developer, and operator experience, relied-upon interfaces, material risks, and delivery shape. Material solution-design and behavioural decisions must be settled during planning and covered by the approval digest. Ordinary implementation details remain with the executor and do not require approval.
 
 When prior conversation already contains explicit approval of material decisions, summarize them rather than reopening them, but still wait for approval of the digest and base path. Never write to an unconfirmed base path or overwrite existing plan files without explicit confirmation.
 
@@ -112,7 +116,7 @@ Treat the approved digest as the boundary for the detailed plan. Preserve its ou
 
 Keep contracts grounded in current requirements, existing behaviour, established architecture, and material risks. Do not turn plausible future needs or theoretical edge cases into acceptance criteria.
 
-Where solution choice materially affects maintenance surface, record the intended solution class or its decision criteria: reuse existing project code, use a framework or platform capability, use an installed dependency, add a dependency, or implement locally. Require a concrete present-purpose rationale when the plan introduces a new subsystem, abstraction boundary, compatibility layer, configurable mechanism, or substantial custom implementation.
+Where solution choice materially affects maintenance surface, record the selected approach and rationale: reuse existing project code, use a framework or platform capability, use an installed dependency, add a dependency, or implement locally. Name the selected capability or dependency when that choice is part of the solution design. Alternatives and decision criteria may explain the selection, but must not replace it. Require a concrete present-purpose rationale when the plan introduces a new subsystem, abstraction boundary, compatibility layer, configurable mechanism, or substantial custom implementation.
 
 Design each checkbox task as one cohesive change that can be implemented, verified, reviewed, and committed in a focused work cycle. Assuming earlier tasks are complete, it should leave the repository in a coherent state with a meaningful outcome. A task file may add detail, but must not hide an oversized task.
 
@@ -157,7 +161,9 @@ Before presenting, perform one artifact-bounded handoff pass. Start from the pla
 
 Check:
 
-- No unresolved user-facing questions remain.
+- No unresolved requirements, material solution-design decisions, or ambiguities remain.
+- Two executors following the plan would preserve the same required behaviour, ownership boundaries, compatibility commitments, and solution design, even if their code shapes differ. If not, resolve and record the missing decision.
+- No material choice is hidden in a TODO, assumption, risk, investigation task, vague instruction, or follow-up decision. Conditional branches have explicit selection rules and specified outcomes.
 - The plan matches the approved digest, and its human-readable entry point preserves the approved outcome and material decisions.
 - No approved scope boundary, experience or behaviour, relied-upon interface, solution-design decision, non-goal, material risk, or delivery shape was silently changed after approval.
 - Scope, out-of-scope items, and important decisions are captured.
@@ -207,6 +213,6 @@ Include:
 - Plan file path(s) created.
 - The approved outcome.
 - Task count and notable supporting files, if any.
-- Known non-blocking risks, assumptions, or follow-up decisions, if present.
+- Known non-blocking risks or assumptions that do not leave required behaviour or solution design unspecified, if present.
 
 Offer to show or revise specific files if requested.

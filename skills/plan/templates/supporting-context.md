@@ -2,7 +2,7 @@
 
 # {Supporting Topic}
 
-Explain shared context that multiple tasks need, or context that does not belong to exactly one task.
+Explain shared context that multiple tasks need, or context that does not belong to exactly one task. Specify or link material solution-design decisions rather than deferring them to the executor; leave ordinary code-shape choices open.
 
 Possible sections, only if useful:
 

@@ -16,7 +16,7 @@ What this task should accomplish.
 
 ## Implementation Notes
 
-Relevant file pointers, existing patterns and capabilities, reuse opportunities, constraints, and task-specific decisions or rationale.
+Relevant file pointers, existing patterns and capabilities, reuse opportunities, constraints, and task-specific decisions or rationale. Specify or link material solution-design decisions rather than deferring them to the executor; leave ordinary code-shape choices open.
 
 ## Source Context
 

@@ -16,11 +16,11 @@ Approved user, developer, or operator workflows, states, defaults, errors, recov
 
 ## Contract surface
 
-Approved interfaces, schemas, commands, events, configuration, persisted formats, migrations, or compatibility commitments.
+Required behaviour and compatibility commitments for affected interfaces, schemas, commands, events, configuration, persisted formats, or migrations. Specify code-level shape only where constrained by an existing contract or the approved design.
 
 ## Solution design and decisions
 
-Major boundaries, dependencies, solution-class choices, and rationale the executor should not have to re-derive.
+Selected approach, component responsibilities and ownership boundaries, dependencies, and rationale the executor should not have to re-derive. Record material decisions; do not leave alternatives for the executor to select.
 
 ## Non-goals
 
@@ -28,7 +28,7 @@ Major boundaries, dependencies, solution-class choices, and rationale the execut
 
 ## Risks and assumptions
 
-- Material uncertainty, external dependencies, or facts not yet proven.
+- Non-blocking uncertainty, external dependencies, or facts not yet proven. These must not leave required behaviour or solution design unspecified.
 
 ## Acceptance Criteria
 
