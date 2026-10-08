@@ -30,7 +30,13 @@ Selected approach, component responsibilities and ownership boundaries, dependen
 
 - Non-blocking uncertainty, external dependencies, or facts not yet proven. These must not leave required behaviour or solution design unspecified.
 
+## Acceptance and verification
+
+Whole-plan observable acceptance criteria and verification guidance, or links to shared context containing them. State genuine integration prerequisites; these criteria are not owned by whichever task appears last.
+
 ## Tasks
+
+Checklist order provides a sensible default execution sequence, but does not require serial execution. Material prerequisites and their reasons are stated in task details. The executor chooses workstream grouping and concurrency within those constraints.
 
 - [ ] Task one
   - [task file](tasks/001-task-one.md)

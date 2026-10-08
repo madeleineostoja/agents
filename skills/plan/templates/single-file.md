@@ -32,13 +32,15 @@ Selected approach, component responsibilities and ownership boundaries, dependen
 
 ## Acceptance Criteria
 
-- Observable criterion grounded in the approved outcome, current contract, or a material risk, with verification guidance where useful.
+- Whole-plan observable criterion grounded in the approved outcome, current contract, or a material risk, with verification guidance where useful. State genuine integration prerequisites; whole-plan acceptance and verification are not owned by whichever task appears last.
 
 ## Implementation Notes
 
 File pointers, existing patterns and capabilities, reuse opportunities, constraints, and useful breadcrumbs.
 
 ## Tasks
+
+Checklist order provides a sensible default execution sequence, but does not require serial execution. State material prerequisites and their reasons in nested task bullets, along with genuine sequencing or atomicity constraints. The executor chooses workstream grouping and concurrency within those constraints.
 
 - [ ] Task one
 - [ ] Task two

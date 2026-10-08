@@ -10,6 +10,10 @@ What this task should accomplish.
 
 - Related work intentionally left to other tasks or excluded entirely.
 
+## Dependencies and execution constraints
+
+Optional: name material prerequisites and explain why they are needed. Record genuine sequencing or atomicity constraints, not checklist order. Omit this section when there are none.
+
 ## Acceptance Criteria
 
 - Observable criterion grounded in the current contract or a material risk, with verification guidance where useful.

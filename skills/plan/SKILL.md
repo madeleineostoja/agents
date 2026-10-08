@@ -118,7 +118,7 @@ Keep contracts grounded in current requirements, existing behaviour, established
 
 Where solution choice materially affects maintenance surface, record the selected approach and rationale: reuse existing project code, use a framework or platform capability, use an installed dependency, add a dependency, or implement locally. Name the selected capability or dependency when that choice is part of the solution design. Alternatives and decision criteria may explain the selection, but must not replace it. Require a concrete present-purpose rationale when the plan introduces a new subsystem, abstraction boundary, compatibility layer, configurable mechanism, or substantial custom implementation.
 
-Design each checkbox task as one cohesive change that can be implemented, verified, reviewed, and committed in a focused work cycle. Assuming earlier tasks are complete, it should leave the repository in a coherent state with a meaningful outcome. A task file may add detail, but must not hide an oversized task.
+Design each checkbox task as one cohesive change that can be implemented, verified, reviewed, and committed in a focused work cycle. Assuming its prerequisites are complete, not every earlier task, it should leave the repository in a coherent state with a meaningful outcome. A task file may add detail, but must not hide an oversized task.
 
 #### Task sizing
 
@@ -134,7 +134,7 @@ Split a task when any of these apply:
 
 Do not create a separate checkbox for a tiny edit, helper, import update, routine test coverage, validation run, git operation, or other mechanical step. Fold these into the task they support. Tests, documentation, dependency changes, migrations, or investigation are standalone tasks only when they produce a substantive independently reviewable outcome of their own.
 
-Keep a larger task intact only when splitting it would create an invalid intermediate state or obscure a single atomic contract change. State that coupling explicitly in the task so the executor and reviewer understand why it cannot be divided.
+Keep a larger task intact only when splitting it would create an invalid intermediate state or obscure a single atomic contract change. Keep correctness-sensitive reader/writer, schema/consumer, and similar changes together when they must change atomically. State that coupling explicitly in the task so the executor and reviewer understand why it cannot be divided.
 
 #### Rules for plans:
 
@@ -143,7 +143,15 @@ Keep a larger task intact only when splitting it would create an invalid interme
 - Do not divide or group the task list with subheadings.
 - Tasks can have sub-points as nested bullets indented below the `- [ ]` task.
 - Do not use checkboxes (`- [ ]`) for non-task sections, eg: Acceptance Criteria.
-- Order tasks by dependency, then priority.
+- Order tasks for readability, with prerequisites before dependent tasks and priority guiding otherwise independent tasks. State in the entry point that list order alone does not require serial execution.
+
+#### Dependencies and execution constraints
+
+Identify material prerequisites and explain why they are needed, in task details or nested checklist bullets. Use the optional task-template section when helpful; omit it when there are no material constraints. Plain language and task references are sufficient — no dependency taxonomy or graph is required.
+
+Reserve “must follow” and “execute sequentially” for genuine correctness, compatibility, operational, or other material constraints, not a convenient narrative sequence. Leave workstream grouping and concurrency to the executor within the stated constraints.
+
+Keep whole-plan acceptance and verification in the entry point or clearly linked shared context, separate from task-specific criteria. State any genuine integration prerequisites for verification without assigning whole-plan completion to whichever task happens to appear last.
 
 #### Guidance for plans:
 
@@ -178,6 +186,9 @@ Check:
 - Task/checklist structure is present (using `- [ ]` checkbox format) and every task is a deliverable.
 - Each task fits one focused implementation/review cycle and logical commit, unless an explicitly documented atomicity constraint prevents splitting it.
 - No task is merely a mechanical, validation-only, or bookkeeping step.
+- Have we accidentally turned a convenient narrative sequence into a required delivery sequence?
+- Material prerequisites and their reasons are explicit; workstream grouping and concurrency remain with the executor within those constraints.
+- Whole-plan acceptance and verification are separate from arbitrary final-task ownership.
 - Supporting docs are not accidentally written as task contracts.
 
 Fix obvious transfer gaps that remain within the approved digest. If a fix would materially change the approved outcome, scope, solution design, experience, contract surface, risks, delivery shape, or base path, stop and present a revised digest for approval. Do not begin another general review cycle after making corrections.
