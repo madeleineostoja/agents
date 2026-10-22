@@ -29,11 +29,11 @@ The following non-standard CLI tools are available; prefer them over the default
 
 ## Testing
 
-- Tests must verify behaviour, not restate implementation. Before adding a test, be able to identify the real bug or regression it would catch; if you can't, skip it.
-- Test public contracts and observable outcomes, not internals; skip trivial formatters, stdlib wrappers, and pass-through helpers unless they encode important behaviour. Assert mock/fake internals only when that interaction is itself the contract.
-- Skip exhaustive parameter sweeps across one code path — pick representative edge cases and one happy path.
-- Prioritise (in order): error/rejection paths, state invariants, data integrity, cross-component contracts, safety/security boundaries, and non-trivial heuristics.
-- When touching tests, consolidate or remove nearby low-value tests instead of adding more noise.
+- Do not add tests merely because code changed. Default to existing coverage and validation; add a test only for a meaningful regression they would miss. Be able to name that regression before writing the test.
+- Prioritise material risks: data loss, broken invariants, security boundaries, failure handling, and cross-component contracts. Skip trivial wrappers, straightforward transformations, and speculative edge cases unless they carry such risk.
+- Test observable behaviour, not implementation details. Use representative cases for distinct failure modes; avoid redundant coverage, exhaustive permutations, and broad snapshots of incidental structure.
+- Count fixtures, mocks, helpers, and validation scripts as part of the test’s maintenance cost. Use minimal valid inputs and existing infrastructure. If a test needs elaborate scaffolding, seek a simpler test boundary; do not build a testing subsystem for a small change.
+- Prefer strengthening or consolidating an existing test over adding another. Keep cleanup local, and stop when the meaningful risk is covered.
 
 ## Tool orchestration
 
